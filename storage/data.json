@@ -9,22 +9,22 @@
             "features": {
                 "positive": [
                     "battery",
-                    "life",
                     "phone",
                     "excellent battery life",
-                    "Camera",
-                    "camera quality",
+                    "life",
                     "good",
+                    "camera quality",
                     "quality",
-                    "Battery",
-                    "drains"
+                    "Camera",
+                    "drains",
+                    "Battery"
                 ],
                 "negative": []
             },
-            "summary": "Customer opinions are mixed. Customers appreciated features like:battery,life,phone,excellent battery life,Camera. No major negative issues were detected.",
+            "summary": "Customer opinions are mixed. Customers appreciated features like:battery,phone,excellent battery life,life,good. No major negative issues were detected.",
             "display_name": "Tomato"
         },
-        "created_at": "15/12/2025, 13:26:18"
+        "created_at": "15/12/2025, 14:10:46"
     },
     "apple": {
         "analysis": {
@@ -62,16 +62,16 @@
                     "life",
                     "quality",
                     "camera quality",
-                    "Camera",
                     "good",
-                    "drains",
-                    "Battery"
+                    "Camera",
+                    "Battery",
+                    "drains"
                 ],
                 "negative": []
             },
             "summary": "Customer opinions are mixed. Customers appreciated features like:battery,excellent battery life,phone,life,quality. No major negative issues were detected.",
             "display_name": "[object HTMLInputElement]"
         },
-        "created_at": "15/12/2025, 13:35:44"
+        "created_at": "15/12/2025, 14:09:15"
     }
 }
