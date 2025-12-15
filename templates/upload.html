@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Review Analyzer</title>
+    <style>
+        body{
+            font-family: Arial,  sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container{
+            width:60%;
+            margin:50px auto;
+            background: white;
+            padding:20px;
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+        }
+         input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px;
+        }
+         button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .note {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h2>AI Product Review Analyzer</h2>
+    <input type="text" id="productName" placeholder="Product Name"/>
+    <textarea id="reviews" row="8"
+        placeholder="Enter one review per line (optional if CSV is used)"></textarea> 
+        <input type="file" id="csvFile" accept=".csv">
+        <div class="note">
+        CSV file must contain a column named <b>review</b>
+    </div>
+
+    <button type="button" onclick="analyzeReviews()">Analyze</button>
+    <div class="loader" id="loader">
+        Analyzing reviews...
+    </div>
+    </div>
+<script>
+    async function analyzeReviews(){
+        const product=document.getElementById("productName").value.trim();
+        const reviews=document.getElementById("reviews").value.trim();
+        const csvFile = document.getElementById("csvFile").files[0];
+        if(!product ){
+            alert("Enter product name ")
+            return;
+        }
+         if (!reviews && !csvFile) {
+        alert("Provide reviews as text or CSV file");
+        return;
+    }
+     const formData = new FormData();
+    formData.append("product_name", productName);
+
+    if (reviews) {
+        formData.append("reviews", reviews);
+    }
+
+    if (csvFile) {
+        formData.append("csv_file", csvFile);
+    }
+
+        //const Review=reviews.split("\n").filter(r=>r.trim()!=="");
+     document.getElementById("loader").style.display = "block";    
+
+       /*  const response=await fetch("/analyze",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                product_name:product,
+                reviews:Review
+            })
+        });
+        const data= await response.json();
+        if(response.ok){
+            window.location.href=`/dashboard/${encodeURIComponent(product)}`
+
+        }
+        else{
+            alert(data.error || "Analysis failed");
+        }
+
+    } */
+   try {
+        const response = await fetch("/analyze", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            window.location.href = `/dashboard/${encodeURIComponent(result.product_name)}`;
+        } else {
+            alert(result.error || "Analysis failed");
+        }
+    } catch (error) {
+        alert("Server error. Check console.");
+        console.error(error);
+    } finally {
+        document.getElementById("loader").style.display = "none";
+    }
+}
+       
+</script>
+    
+</body>
+</html>

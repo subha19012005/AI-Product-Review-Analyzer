@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - {{ product_name }}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.1.0/src/wordcloud2.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .chart-container, .wordcloud-container {
+            margin: 30px 0;
+        }
+        #positive-cloud, #negative-cloud {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ddd;
+        }
+        .summary {
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .wordcloud-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Dashboard: {{ product_name }}</h2>
+
+        <!-- Sentiment Chart -->
+        <div class="chart-container">
+            <canvas id="sentimentChart"></canvas>
+        </div>
+
+        <!-- Positive WordCloud -->
+        <div class="wordcloud-container">
+            <h3 class="wordcloud-title">Positive Features</h3>
+            <canvas id="positive-cloud"></canvas>
+        </div>
+
+        <!-- Negative WordCloud -->
+        <div class="wordcloud-container">
+            <h3 class="wordcloud-title">Negative Features</h3>
+            <canvas id="negative-cloud"></canvas>
+        </div>
+
+        <!-- Summary -->
+        <div class="summary">
+            <h3>Summary</h3>
+            <p>{{ summary }}</p>
+        </div>
+    </div>
+
+    <script>
+        
+    // ===== Sentiment Chart =====
+    const sentimentData = {{ sentiment | tojson }};
+    const ctx = document.getElementById('sentimentChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(sentimentData),
+            datasets: [{
+                label: 'Number of Reviews',
+                data: Object.values(sentimentData),
+                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: { display: true, text: 'Sentiment Distribution' }
+            },
+            scales: { y: { beginAtZero: true, precision: 0 } }
+        }
+    });
+
+    // ===== WordCloud Helper =====
+    function generateWordCloud(canvasId, words) {
+        const canvas = document.getElementById(canvasId);
+        if (!words || words.length === 0) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "20px Arial";
+            ctx.fillStyle = "#333";
+            ctx.fillText("No features found", 10, canvas.height / 2);
+            return;
+        }
+
+        // Remove duplicates & empty strings
+        const cleanWords = [...new Set(words.filter(w => typeof w === "string" && w.trim() !== ""))];
+
+        WordCloud(canvas, {
+            list: cleanWords.map(w => [w, Math.floor(Math.random() * 50) + 20]),
+            gridSize: Math.round(16 * canvas.width / 1024),
+            weightFactor: size => size,
+            fontFamily: 'Arial',
+            color: () => `hsl(${Math.random() * 360}, 70%, 50%)`,
+            rotateRatio: 0.5,
+            rotationSteps: 2,
+            backgroundColor: '#fff'
+        });
+    }
+
+    // ===== Generate WordClouds =====
+    const positiveFeatures = {{ positive_features | tojson }} || [];
+    const negativeFeatures = {{ negative_features | tojson }} || [];
+
+    generateWordCloud('positive-cloud', positiveFeatures);
+    generateWordCloud('negative-cloud', negativeFeatures);
+
+    </script>
+</body>
+</html>
