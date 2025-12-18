@@ -54,6 +54,25 @@ python app.py
 
 --- 
 
+## Screenshots
+
+### Upload Page
+![Upload Page](Screenshots/upload%20page.png)
+
+### Sentiment Distribution
+![Bar Chart](Screenshots/bar%20chart.png)
+
+### Positive Features Word Cloud
+![Positive Features](Screenshots/Positive%20features%20word%20cloud.png)
+
+### Negative Features Word Cloud
+![Negative Features](Screenshots/negative%20features%20word%20cloud.png)
+
+### Summary View
+![Summary](Screenshots/summary.png)
+
+
+
 ## Usage:
 
 1. Enter a product name.
