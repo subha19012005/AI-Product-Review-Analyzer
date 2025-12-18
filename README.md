@@ -28,33 +28,33 @@ It performs sentiment analysis, extracts positive and negative features, generat
 
 ## Installation / Setup
 
-1. Clone the repository:
-```bash
-git clone <your-repo-link>
-cd backend
-2. Create the virtual environment:
-```bash
+1.**Clone the repository**:
+   git clone <your-repo-link>
+   cd backend
+   
+2.**Create the virtual environment**:
 python -m venv venv
-3.Activate the virtual environment:
-Windows:
-```bash
-venv\Scripts\activate
-Linux / MacOS:
-```bash
-source venv/bin/activate
-4. Install dependencies:
-```bash
+
+3.**Activate the virtual environment**:
+
+**Windows**:
+  venv\Scripts\activate
+  
+  **Linux / MacOS**:
+  source venv/bin/activate
+
+4.**Install dependencies**:
 pip install -r requirements.txt
-5. Run the Flask app:
-```bash
+
+5.**Run the Flask app**:
 python app.py
-6. Open your browser and navigate to:
-http://127.0.0.1:5000/
 
----
+6.**Open your browser and navigate to**:
+  http://127.0.0.1:5000/
 
+--- 
 
-Usage:
+## Usage:
 
 1. Enter a product name.
 2. Enter reviews(one per line) or upload CSV file containing a review column.
@@ -64,23 +64,19 @@ Usage:
      Word clouds for positive and negative features
      Summary of customer opinion
 
+---
 
-Notes:
-  CSV files must contain a column named review.
-  TextBlob is used for sentiment analysis and feature extraction, which works best with longer sentences.
-  The application supports multiple reviews at once, either via text input or CSV upload.
+## Known Limitations
+TextBlob works better with longer sentences; short phrases may be classified as neutral.
+CSV input may not perfectly match text input for very short reviews.
+Does not yet support user authentication or database storage.
 
+---
 
-Screenshots:
+## Future Improvements:
+Integrate advanced NLP models like VADER or transformers for better sentiment accuracy.
+Add database support (MySQL/PostgreSQL) for persistent storage.
+Enhance frontend using React or another modern frontend framework.
+Include filtering and searching for multiple products in the dashboard.
 
-Known Limitations
-  TextBlob works better with longer sentences; short phrases may be classified as neutral.
-  CSV input may not perfectly match text input for very short reviews.
-  Does not yet support user authentication or database storage.
-
-Future Improvements
-  Integrate advanced NLP models like VADER or transformers for better sentiment accuracy.
-  Add database support (MySQL/PostgreSQL) for persistent storage.
-  Enhance frontend using React or another modern frontend framework.
-  Include filtering and searching for multiple products in the dashboard.
 
