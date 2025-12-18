@@ -6,6 +6,8 @@ from storage.json_db import add_product, get_product
 from nlp.sentiment import analyze_sentiment
 from nlp.features import extract_features
 from nlp.summary import generate_Summary
+import nltk
+nltk.download('punkt')
 
 app = Flask(__name__)
 
@@ -110,4 +112,4 @@ def analyze():
 # Run Flask
 # -----------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
