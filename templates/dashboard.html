@@ -10,129 +10,150 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
         }
+
         .container {
             width: 90%;
             max-width: 1000px;
-            margin: 30px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 30px;
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
         }
+
         h2 {
             text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
         }
-        .chart-container, .wordcloud-container {
-            margin: 30px 0;
+
+        .glass-card {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 14px;
+
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        #positive-cloud, #negative-cloud {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #ddd;
-        }
-        .summary {
-            padding: 10px;
-            background: #f0f0f0;
-            border-radius: 5px;
-            margin-top: 20px;
-        }
-        .wordcloud-title {
+
+        .glass-title {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        canvas {
+            width: 100% !important;
+        }
+
+        .summary {
+            line-height: 1.6;
+            color: #ddd;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Dashboard: {{ product_name }}</h2>
+        <h2>Dashboard — {{ product_name }}</h2>
 
         <!-- Sentiment Chart -->
-        <div class="chart-container">
+        <div class="glass-card">
+            <h3 class="glass-title">Sentiment Distribution</h3>
             <canvas id="sentimentChart"></canvas>
         </div>
 
         <!-- Positive WordCloud -->
-        <div class="wordcloud-container">
-            <h3 class="wordcloud-title">Positive Features</h3>
-            <canvas id="positive-cloud"></canvas>
+        <div class="glass-card">
+            <h3 class="glass-title">Positive Features</h3>
+            <canvas id="positive-cloud" height="300"></canvas>
         </div>
 
         <!-- Negative WordCloud -->
-        <div class="wordcloud-container">
-            <h3 class="wordcloud-title">Negative Features</h3>
-            <canvas id="negative-cloud"></canvas>
+        <div class="glass-card">
+            <h3 class="glass-title">Negative Features</h3>
+            <canvas id="negative-cloud" height="300"></canvas>
         </div>
 
         <!-- Summary -->
-        <div class="summary">
-            <h3>Summary</h3>
+        <div class="glass-card summary">
+            <h3 class="glass-title">Summary</h3>
             <p>{{ summary }}</p>
         </div>
     </div>
 
-    <script>
-        
+<script>
     // ===== Sentiment Chart =====
     const sentimentData = {{ sentiment | tojson }};
     const ctx = document.getElementById('sentimentChart').getContext('2d');
+
     new Chart(ctx, {
         type: 'bar',
         data: {
             labels: Object.keys(sentimentData),
             datasets: [{
-                label: 'Number of Reviews',
                 data: Object.values(sentimentData),
-                backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: { display: false },
-                title: { display: true, text: 'Sentiment Distribution' }
+                title: {
+                    display: true,
+                    text: 'Sentiment Distribution',
+                    color: '#fff'
+                }
             },
-            scales: { y: { beginAtZero: true, precision: 0 } }
+            scales: {
+                x: { ticks: { color: '#fff' } },
+                y: {
+                    ticks: { color: '#fff' },
+                    beginAtZero: true
+                }
+            }
         }
     });
 
     // ===== WordCloud Helper =====
     function generateWordCloud(canvasId, words) {
         const canvas = document.getElementById(canvasId);
+
         if (!words || words.length === 0) {
             const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.font = "20px Arial";
-            ctx.fillStyle = "#333";
-            ctx.fillText("No features found", 10, canvas.height / 2);
+            ctx.fillStyle = "#ccc";
+            ctx.font = "18px Arial";
+            ctx.fillText("No features found", 20, canvas.height / 2);
             return;
         }
 
-        // Remove duplicates & empty strings
-        const cleanWords = [...new Set(words.filter(w => typeof w === "string" && w.trim() !== ""))];
-
         WordCloud(canvas, {
-            list: cleanWords.map(w => [w, Math.floor(Math.random() * 50) + 20]),
+            list: [...new Set(words)].map(w => [w, Math.random() * 50 + 20]),
             gridSize: Math.round(16 * canvas.width / 1024),
-            weightFactor: size => size,
-            fontFamily: 'Arial',
-            color: () => `hsl(${Math.random() * 360}, 70%, 50%)`,
-            rotateRatio: 0.5,
-            rotationSteps: 2,
-            backgroundColor: '#fff'
+            fontFamily: 'Segoe UI',
+            color: () => `hsl(${Math.random() * 360}, 70%, 60%)`,
+            rotateRatio: 0.3,
+            backgroundColor: 'transparent'
         });
     }
 
-    // ===== Generate WordClouds =====
-    const positiveFeatures = {{ positive_features | tojson }} || [];
-    const negativeFeatures = {{ negative_features | tojson }} || [];
-
-    generateWordCloud('positive-cloud', positiveFeatures);
-    generateWordCloud('negative-cloud', negativeFeatures);
-
-    </script>
+    generateWordCloud('positive-cloud', {{ positive_features | tojson }});
+    generateWordCloud('negative-cloud', {{ negative_features | tojson }});
+</script>
 </body>
 </html>

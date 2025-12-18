@@ -2,29 +2,31 @@
     "tomato": {
         "analysis": {
             "sentiment": {
-                "positive": 3,
+                "positive": 2,
                 "neutral": 0,
-                "negative": 0
+                "negative": 1
             },
             "features": {
                 "positive": [
-                    "battery",
                     "phone",
-                    "excellent battery life",
                     "life",
+                    "excellent battery life",
+                    "battery",
+                    "Camera",
                     "good",
                     "camera quality",
-                    "quality",
-                    "Camera",
-                    "drains",
-                    "Battery"
+                    "quality"
                 ],
-                "negative": []
+                "negative": [
+                    "Battery",
+                    "bad",
+                    "battery"
+                ]
             },
-            "summary": "Customer opinions are mixed. Customers appreciated features like:battery,phone,excellent battery life,life,good. No major negative issues were detected.",
+            "summary": "Cusotmers generally have negative opinions about this product. Customers appreciated features like:phone,life,excellent battery life,battery,Camera. Customer reported issue with:Battery,bad,battery.",
             "display_name": "Tomato"
         },
-        "created_at": "15/12/2025, 14:10:46"
+        "created_at": "18/12/2025, 17:46:56"
     },
     "apple": {
         "analysis": {
@@ -73,5 +75,105 @@
             "display_name": "[object HTMLInputElement]"
         },
         "created_at": "15/12/2025, 14:09:15"
+    },
+    "phone": {
+        "analysis": {
+            "sentiment": {
+                "positive": 1,
+                "neutral": 0,
+                "negative": 2
+            },
+            "features": {
+                "positive": [
+                    "Screen",
+                    "scratches",
+                    "screen"
+                ],
+                "negative": [
+                    "bad",
+                    "battery",
+                    "Battery",
+                    "charging",
+                    "Slow"
+                ]
+            },
+            "summary": "Cusotmers generally have negative opinions about this product. Customers appreciated features like:Screen,scratches,screen. Customer reported issue with:bad,battery,Battery,charging,Slow.",
+            "display_name": "Phone"
+        },
+        "created_at": "18/12/2025, 18:21:09"
+    },
+    "test phone": {
+        "analysis": {
+            "sentiment": {
+                "positive": 2,
+                "neutral": 0,
+                "negative": 1
+            },
+            "features": {
+                "positive": [
+                    "Good",
+                    "battery",
+                    "good battery",
+                    "excellent",
+                    "camera",
+                    "Excellent"
+                ],
+                "negative": [
+                    "Poor",
+                    "speaker",
+                    "poor"
+                ]
+            },
+            "summary": "Cusotmers generally have negative opinions about this product. Customers appreciated features like:Good,battery,good battery,excellent,camera. Customer reported issue with:Poor,speaker,poor.",
+            "display_name": "Test Phone"
+        },
+        "created_at": "18/12/2025, 17:27:46"
+    },
+    "csv product": {
+        "analysis": {
+            "sentiment": {
+                "positive": 1,
+                "neutral": 0,
+                "negative": 2
+            },
+            "features": {
+                "positive": [
+                    "product",
+                    "Great",
+                    "great product"
+                ],
+                "negative": [
+                    "Bad",
+                    "quality",
+                    "average",
+                    "Average",
+                    "performance"
+                ]
+            },
+            "summary": "Cusotmers generally have negative opinions about this product. Customers appreciated features like:product,Great,great product. Customer reported issue with:Bad,quality,average,Average,performance.",
+            "display_name": "CSV Product"
+        },
+        "created_at": "18/12/2025, 17:27:46"
+    },
+    "dashboard product": {
+        "analysis": {
+            "sentiment": {
+                "positive": 2,
+                "neutral": 0,
+                "negative": 0
+            },
+            "features": {
+                "positive": [
+                    "Nice",
+                    "nice",
+                    "design",
+                    "useful"
+                ],
+                "negative": []
+            },
+            "summary": "Customer opinions are mixed. Customers appreciated features like:Nice,nice,design,useful. No major negative issues were detected.",
+            "display_name": "Dashboard Product"
+        },
+        "created_at": "18/12/2025, 17:27:46"
     }
 }

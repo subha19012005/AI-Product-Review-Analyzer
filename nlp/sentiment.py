@@ -15,10 +15,10 @@ def analyze_sentiment(reviews):
         polarity=blob.sentiment.polarity
 
 
-        if polarity > 0.1:
+        if polarity >= 0.1:
             sentiment="positive"
             dist["positive"]+=1
-        elif polarity < -0.1:
+        elif polarity <= -0.1:
             sentiment="negative"
             dist["negative"]+=1
         else:
