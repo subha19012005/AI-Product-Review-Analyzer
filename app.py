@@ -7,7 +7,12 @@ from nlp.sentiment import analyze_sentiment
 from nlp.features import extract_features
 from nlp.summary import generate_Summary
 import nltk
+
 nltk.download('punkt')
+nltk.download('brown')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
+
 
 app = Flask(__name__)
 
