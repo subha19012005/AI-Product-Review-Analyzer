@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - {{ product_name }}</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wordcloud@1.1.0/src/wordcloud2.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            padding: 30px;
+            border-radius: 18px;
+
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .glass-card {
+            margin: 25px 0;
+            padding: 20px;
+            border-radius: 14px;
+
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        canvas {
+            width: 100% !important;
+        }
+
+        .summary {
+            line-height: 1.6;
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Dashboard — {{ product_name }}</h2>
+
+        <!-- Sentiment Chart -->
+        <div class="glass-card">
+            <h3 class="glass-title">Sentiment Distribution</h3>
+            <canvas id="sentimentChart"></canvas>
+        </div>
+
+        <!-- Positive WordCloud -->
+        <div class="glass-card">
+            <h3 class="glass-title">Positive Features</h3>
+            <canvas id="positive-cloud" height="300"></canvas>
+        </div>
+
+        <!-- Negative WordCloud -->
+        <div class="glass-card">
+            <h3 class="glass-title">Negative Features</h3>
+            <canvas id="negative-cloud" height="300"></canvas>
+        </div>
+
+        <!-- Summary -->
+        <div class="glass-card summary">
+            <h3 class="glass-title">Summary</h3>
+            <p>{{ summary }}</p>
+        </div>
+    </div>
+
+<script>
+    // ===== Sentiment Chart =====
+    const sentimentData = {{ sentiment | tojson }};
+    const ctx = document.getElementById('sentimentChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(sentimentData),
+            datasets: [{
+                data: Object.values(sentimentData),
+                backgroundColor: ['#4CAF50', '#FFC107', '#F44336']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                title: {
+                    display: true,
+                    text: 'Sentiment Distribution',
+                    color: '#fff'
+                }
+            },
+            scales: {
+                x: { ticks: { color: '#fff' } },
+                y: {
+                    ticks: { color: '#fff' },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // ===== WordCloud Helper =====
+    function generateWordCloud(canvasId, words) {
+        const canvas = document.getElementById(canvasId);
+
+        if (!words || words.length === 0) {
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#ccc";
+            ctx.font = "18px Arial";
+            ctx.fillText("No features found", 20, canvas.height / 2);
+            return;
+        }
+
+        WordCloud(canvas, {
+            list: [...new Set(words)].map(w => [w, Math.random() * 50 + 20]),
+            gridSize: Math.round(16 * canvas.width / 1024),
+            fontFamily: 'Segoe UI',
+            color: () => `hsl(${Math.random() * 360}, 70%, 60%)`,
+            rotateRatio: 0.3,
+            backgroundColor: 'transparent'
+        });
+    }
+
+    generateWordCloud('positive-cloud', {{ positive_features | tojson }});
+    generateWordCloud('negative-cloud', {{ negative_features | tojson }});
+</script>
+</body>
+</html>

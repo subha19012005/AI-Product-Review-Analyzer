@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Product Review Analyzer</title>
+    <style>
+        body{
+             margin:0;
+             font-family: 'Segoe UI',sans-serif;
+             min-height: 100vh;
+             background: linear-gradient(135deg,#0f0f0f,#1a1a1a);
+             display:flex;
+             align-items: center;
+             justify-content: center;
+             color:#ffffff;
+        }
+        .container{
+            .container {
+  width: 60%;
+  padding: 30px;
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+           
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+  font-weight: 600;
+        }
+         input, textarea, button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+             border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  color: white;
+  outline: none;
+
+        }
+        input::placeholder,
+textarea::placeholder {
+  color: #ccc;
+}
+         button {
+              margin-top: 20px;
+              
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+
+  background: linear-gradient(135deg, #4facfe, #00f2fe);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+        }
+        button:hover {
+            transform: scale(1.03);
+        }
+        .note {
+            font-size: 14px;
+            color: #ddd;
+            margin-top: 8px;
+        }
+        .loader {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+        }
+        .btn-center {
+    display: flex;
+    justify-content: center;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+    <h2>AI Product Review Analyzer</h2>
+    <input type="text" id="productName" placeholder="Product Name"/>
+    <textarea id="reviews" row="8"
+        placeholder="Enter one review per line (optional if CSV is used)"></textarea> 
+        <input type="file" id="csvFile" accept=".csv">
+        <div class="note">
+        CSV file must contain a column named <b>review</b>
+    </div>
+     <div class="btn-center">
+    <button type="button" onclick="analyzeReviews()">Analyze</button></div>
+    <div class="loader" id="loader">
+        Analyzing reviews...
+    </div>
+    </div>
+<script>
+    async function analyzeReviews(){
+        const product=document.getElementById("productName").value.trim();
+        const reviews=document.getElementById("reviews").value.trim();
+        const csvFile = document.getElementById("csvFile").files[0];
+        if(!product ){
+            alert("Enter product name ")
+            return;
+        }
+         if (!reviews && !csvFile) {
+        alert("Provide reviews as text or CSV file");
+        return;
+    }
+     const formData = new FormData();
+    formData.append("product_name", product);
+
+    if (reviews) {
+        formData.append("reviews", reviews);
+    }
+
+    if (csvFile) {
+        formData.append("csv_file", csvFile);
+    }
+
+        //const Review=reviews.split("\n").filter(r=>r.trim()!=="");
+     document.getElementById("loader").style.display = "block";    
+
+       /*  const response=await fetch("/analyze",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({
+                product_name:product,
+                reviews:Review
+            })
+        });
+        const data= await response.json();
+        if(response.ok){
+            window.location.href=`/dashboard/${encodeURIComponent(product)}`
+
+        }
+        else{
+            alert(data.error || "Analysis failed");
+        }
+
+    } */
+   try {
+        const response = await fetch("/analyze", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            window.location.href = `/dashboard/${encodeURIComponent(result.product_name)}`;
+        } else {
+            alert(result.error || "Analysis failed");
+        }
+    } catch (error) {
+        alert("Server error. Check console.");
+        console.error(error);
+    } finally {
+        document.getElementById("loader").style.display = "none";
+    }
+}
+       
+</script>
+    
+</body>
+</html>
